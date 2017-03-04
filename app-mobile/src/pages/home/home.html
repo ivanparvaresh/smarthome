@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>My Smart Home</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-row class="welcome-row" padding>
+    <h2 class="time">{{time}}</h2>
+    <h3 class="description">
+      
+    </h3>
+  </ion-row>
+
+  <ion-row class="controls-row">
+    <ion-grid>
+      <ion-row>
+        <ion-col width-50 *ngFor="let command of device.commands; let i= index ">
+          <button ion-button block (click)="execCommand(command)">
+            <div class="card-title">{{command.title}}</div>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-row>
+
+</ion-content>

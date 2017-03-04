@@ -1,0 +1,39 @@
+page-home {
+    .scroll-content {
+        overflow: hidden;
+    }
+    .welcome-row {
+        background-color: rgba(186, 196, 212, 0.66);
+        text-align: center;
+        .time {
+            width: 100%;
+            display: block;
+            text-align: center;
+            font-size: 50px;
+            color: white;
+            margin-bottom: 0px;
+        }
+        .description {
+            color: white;
+            width: 100%;
+            display: block;
+            text-align: center;
+            font-size: 20px;
+            color: white;
+        }
+    }
+    .controls-row {
+        button {
+            position: relative;
+            text-align: center;
+            padding: 5px;
+            height: 104px;
+            background-color: rgba(47, 78, 105, 0.69);
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+        }
+    }
+}

@@ -1,4 +1,3 @@
-var fs = require("fs");
 module.exports = function (app) {
 
     app.factory("logic.services.actions", [], function () {
@@ -8,7 +7,7 @@ module.exports = function (app) {
             register: function (action) {
                 _actions.push(action);
             },
-            getAction: function (name) {
+            get: function (name) {
                 for (var i = 0; i < _actions.length; i++) {
                     if (_actions[i].name == name)
                         return _actions[i];

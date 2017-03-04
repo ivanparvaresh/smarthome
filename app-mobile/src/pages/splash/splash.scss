@@ -1,0 +1,22 @@
+.ios,
+.md {
+    page-splash {
+        .scroll-content {
+            background-color: #42c7ff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .title-row {
+            display: block;
+            width: 100%;
+            color: white;
+            text-align: center;
+            position: fixed;
+            top: 50%;
+        }
+        .title-row h1.title {
+            font-size: 50px;
+        }
+    }
+}

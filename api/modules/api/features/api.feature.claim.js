@@ -23,7 +23,7 @@ module.exports = function (sarina) {
                 var claims = req.body.claims;
                 $controller.updateClaims(token, claims)
                     .then(function (result) {
-                        res.send(result);
+                        res.send({success:true});
                     }).catch(function (err) { handleError(res, err); });
 
             })

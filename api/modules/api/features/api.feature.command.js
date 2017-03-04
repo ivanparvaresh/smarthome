@@ -30,5 +30,17 @@ module.exports = function (sarina) {
                     }).catch(function (err) { handleError(res, err); });
             });
 
+            $express.post("/api/1/command2", function (req, res) {
+                var token = req.body.token;
+                var data = req.body.data;
+
+                $controller.execCommand2(token, data)
+                    .then(function (result) {
+
+                        res.send({ "success": true });
+
+                    }).catch(function (err) { handleError(res, err); });
+            })
+
         });
 }

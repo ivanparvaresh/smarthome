@@ -5,13 +5,13 @@ module.exports = function (app) {
             "sarina.logger",
             "logic.services.device",
             "logic.services.actions",
-            "logic.services.ruleEngine",
+            "logic.services.rule.operators",
         ],
-        function ($logger, $device, $actions, $rule) {
+        function ($logger, $device, $actions, $operators) {
 
             return {
 
-                _runTrigger: function (device) {
+                _runTriggers: function (device, claims) {
                     var me = this;
                     return new Promise(function (resolve, reject) {
 
@@ -26,23 +26,64 @@ module.exports = function (app) {
                         $logger.debug("Running Triggers:")
                         for (var i = 0; i < device.triggers.length; i++) {
                             var trigger = device.triggers[i];
-                            progress++;
+                            $logger.debug("\t" + trigger.name);
                             (function (trigger) {
-                                $rule.check(device.claims, trigger.rules)
-                                    .then(function (result) {
-                                        if (result) {
-                                            $logger.debug("\t[" + trigger.name + "] ACCEPTED");
-                                            me._execAction(device, trigger.action, trigger.data)
-                                                .then(onCompleted).catch(onCompleted);
-                                        }
-                                        else
-                                            $logger.debug("\t[" + trigger.name + "] REJECTED");
-                                    }).catch(function (err) {
-                                        $logger.debug("\t[" + trigger.name + "] Faield", err);
-                                        onCompleted();
-                                    });
 
-                            })(trigger);
+                                var ruleFailed = false;
+                                for (var j = 0; j < trigger.rules.length; j++) {
+                                    var rule = trigger.rules[j];
+                                    $logger.debug("\t\t Running Rule:" + rule.name);
+                                    var value = device.claims[rule.name];
+
+                                    if (value == null) {
+                                        var operator =
+                                            $operators.getValue(rule.name);
+                                        if (operator != null) {
+                                            value = operator.exec(device);
+                                        }
+                                    }else{
+                                        $logger.debug("\t\t\t Using Device Claims",value);
+                                    }
+
+                                    if (value == null) {
+                                        if (claims != null) {
+                                            value = claims[rule.name];
+                                        }
+                                    }
+
+
+                                    var operator =
+                                        $operators.getOperator(rule.op);
+                                    if (operator == null) {
+                                        $logger.debug("\t\t Rule operator '" + rule.op + "' not found");
+                                        ruleFailed = true;
+                                        break;
+                                    }
+
+                                    if (!operator.exec(value, rule.value)) {
+                                        $logger.debug("\t\t\t REJECTED [" + value + " " + rule.op + " " + rule.value + "]");
+                                        ruleFailed = true;
+                                        break;
+                                    } else {
+                                        $logger.debug("\t\t\t ACCEPTED [" + value + " " + rule.op + " " + rule.value + "]");
+                                    }
+                                }
+                                if (!ruleFailed) {
+                                    $logger.debug("\t\t Trigger Accepted, Running Actions:");
+                                    for (var a = 0; a < trigger.actions.length; a++) {
+                                        var action = trigger.actions[a];
+                                        $logger.debug("\t\t\t Action [" + action.name + "]");
+                                        progress++;
+                                        me._execAction(device, action.name, action.data)
+                                            .then(onCompleted).catch(onCompleted);
+                                    }
+                                } else {
+                                    progress++;
+                                    onCompleted();
+                                    $logger.debug("\t\t Rule Rejected");
+                                }
+
+                            })(trigger)
                         }
                     })
                 },
@@ -51,7 +92,7 @@ module.exports = function (app) {
                     $logger.debug("Executing action '" + name + "'", JSON.stringify(params));
                     return new Promise(function (resolve, reject) {
 
-                        var action = $actions.getAction(name);
+                        var action = $actions.get(name);
                         if (action == null) {
                             reject(new Error("Action [" + name + "] not founc"));
                             return;
@@ -87,6 +128,12 @@ module.exports = function (app) {
                         }
                         resolve(device.$config);
                     })
+                },
+                getDevices: function () {
+                    return new Promise(function (resolve, reject) {
+                        resolve($device.getDevices());
+                    })
+
                 },
 
                 reloadData: function (token) {
@@ -139,7 +186,9 @@ module.exports = function (app) {
                     });
                 },
 
-                // CLAIMS
+                //////////////////////////////////////////
+                //  CLAIMS
+                //////////////////////////////////////////
                 updateClaims: function (token, claims) {
 
                     var me = this;
@@ -151,57 +200,24 @@ module.exports = function (app) {
                             return;
                         }
 
-                        if (device.claims==null)
-                            device.claims=[];
+                        if (device.claims == null)
+                            device.claims = [];
 
                         $logger.debug("\t device : " + device.name);
                         for (var j = 0; j < claims.length; j++) {
                             $logger.debug("\t [" + j + "] " + claims[j].name + " = " + claims[j].value);
                             device.claims[claims[j].name] = claims[j].value;
                         }
-                        resolve(true);
-                        //me.runTrigger(device).then(resolve).catch(reject);
+                        me._runTriggers(device, { '/executer': 'update_claim' }).then(resolve).catch(reject);
                     });
 
                 },
-
-                // CONTROLLING LIGHTS
-                setAllLightsStatus: function (token, status) {
+                runTriggers: function (device) {
                     var me = this;
                     return new Promise(function (resolve, reject) {
-
-                        var device = $device.findDeviceByToken(token);
-                        if (device == null) {
-                            reject(new Error('Token is invalid'));
-                            return;
-                        }
-
-
-                        var progress = 0;
-                        function onCompleted() {
-                            progress--;
-                            if (progress <= 0) {
-                                resolve();
-                            }
-                        }
-
-                        for (var i = 0; i < device.locations.length; i++) {
-                            progress++;
-                            var location = device.locations[i];
-
-                            if (status) {
-                                device.$api.turnAllLightsOn(location.id)
-                                    .then(onCompleted).catch(onCompleted);
-                            } else {
-                                device.$api.turnAllLightsOff(location.id)
-                                    .then(onCompleted).catch(onCompleted);
-                            }
-                        }
-
-                    }); // end of promise
-                },
-
+                        me._runTriggers(device, { '/executer': 'schedule' }).then(resolve).catch(reject);
+                    })
+                }
             }
         })
-
 }

@@ -25,5 +25,15 @@ var app =
 app.module(sarinaexpress);
 app.loadModules("./modules");
 
+app.exec("App.exec", [
+    "options",
+    "sarina.express.server",
+], function (options, $server, $scheduler) {
+    return {
+        run: function (resolve, reject) {
+            $server.start(options.api.port).then(resolve).catch(reject);
+        }
+    }
+})
 
 app.start();

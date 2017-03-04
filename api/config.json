@@ -4,5 +4,8 @@
     },
     "log": {
         "file": "./log/app.log"
+    },
+    "scheduler": {
+        "interval": 10000
     }
 }

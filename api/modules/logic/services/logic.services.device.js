@@ -74,6 +74,9 @@ module.exports = function (app) {
 
             }
 
+            findDevices(dummy) {
+                return this._devices;
+            }
 
             findDeviceByName(name) {
                 for (var i = 0; i < this._devices.length; i++) {
@@ -94,6 +97,7 @@ module.exports = function (app) {
                         return this._devices[i];
                 }
             }
+
 
         }
 
