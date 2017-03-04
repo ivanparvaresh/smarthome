@@ -35,3 +35,51 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
+
+
+#IONIC
+# Specifies intentionally untracked files to ignore when using Git
+# http://git-scm.com/docs/gitignore
+
+*~
+*.sw[mnpcod]
+*.log
+*.tmp
+*.tmp.*
+log.txt
+*.sublime-project
+*.sublime-workspace
+.vscode/
+npm-debug.log*
+
+.idea/
+.sass-cache/
+.tmp/
+.versions/
+
+.DS_Store
+Thumbs.db
+UserInterfaceState.xcuserstate
+
+#api
+api/data/
+
+# app-mobile
+app-mobile/coverage/
+app-mobile/dist/
+app-mobile/node_modules/
+app-mobile/tmp/
+app-mobile/temp/
+app-mobile/hooks/
+app-mobile/platforms/
+app-mobile/plugins/
+app-mobile/plugins/android.json
+app-mobile/plugins/ios.json
+app-mobile/www/
+app-mobile/$RECYCLE.BIN/
+
+
+
+#DUMMY
+tttt/*
