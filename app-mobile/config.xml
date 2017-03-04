@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.smarthome.appmobile" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>app-mobile</name>
+  <name>MySmartHome</name>
   <description>An awesome Ionic/Cordova app.</description>
   <author email="javadparvaresh@gmail.com" href="https://github.com/javadparvaresh/smarthome-yonnet-fun">Smart Home Smarter Controller</author>
   <content src="index.html"/>

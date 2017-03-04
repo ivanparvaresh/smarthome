@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 export class ApiService {
 
     public token: string;
-    private baseAddress = "http://192.168.1.109:3000/api/1";
+    private baseAddress = "http://46.209.213.156:3000/api/1";
 
     constructor(private http: Http) {
     }
