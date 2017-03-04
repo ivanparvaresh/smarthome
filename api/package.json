@@ -1,0 +1,40 @@
+{
+  "author": {
+    "name": "javadparvaresh@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/javadparvaresh/smarthome-yonnet-fun/issues"
+  },
+  "dependencies": {
+    "sarina": "^1.0.3",
+    "sarina.express":"^1.0.8",
+    "body-parser":"1.16.1",
+    "winston": "2.2.0"
+  },
+  "description": "A simple tool to make your smart home smarter",
+  "devDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "homepage": "https://github.com/javadparvaresh/smarthome-yonnet-fun",
+  "keywords": [
+    "smarthome",
+    "fun",
+    "control",
+    "trigger"
+  ],
+  "license": "MIT",
+  "main": "app.js",
+  "maintainers": [
+    {
+      "name": "javadparvaresh",
+      "email": "javadparvaresh@gmail.com"
+    }
+  ],
+  "name": "smarthome-controller",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/javadparvaresh/smarthome-yonnet-fun"
+  },
+  "version": "1.0.1"
+}
